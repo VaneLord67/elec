@@ -6,6 +6,7 @@ import com.cjr.elec.common.api.CommonResult;
 import com.cjr.elec.modules.elec.model.VideoInfo;
 import com.cjr.elec.modules.elec.vo.DurationVO;
 import org.apache.http.HttpEntity;
+import com.cjr.elec.common.exception.Asserts;
 import org.springframework.web.bind.annotation.*;
 
 import org.apache.http.HttpResponse;
@@ -42,7 +43,11 @@ public class VideoController {
             String dataJson = JSON.toJSONString(data);
             List<VideoInfo> videoInfoList = JSONObject.parseArray(dataJson, VideoInfo.class);
             for (int i = start - 1; i < end; i++) {
-                sum += videoInfoList.get(i).getDuration();
+                if (i >= 0 && i < videoInfoList.size()) {
+                    sum += videoInfoList.get(i).getDuration();
+                } else {
+                    Asserts.fail("分p输入非法");
+                }
             }
             hour = sum / 3600;
             sum %= 3600;
