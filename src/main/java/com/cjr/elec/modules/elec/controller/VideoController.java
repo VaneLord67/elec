@@ -1,11 +1,13 @@
-package com.cjr.elec;
+package com.cjr.elec.modules.elec.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.cjr.elec.common.api.CommonResult;
 import com.cjr.elec.modules.elec.model.VideoInfo;
+import com.cjr.elec.modules.elec.vo.DurationVO;
 import org.apache.http.HttpEntity;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.annotation.*;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -15,18 +17,20 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.List;
 
-@SpringBootTest
-class ElecApplicationTests {
+/**
+ * @author CJR
+ * @create 2022-02-09-16:34
+ */
+@RestController
+@RequestMapping("/video")
+public class VideoController {
 
-    @Test
-    void bTest() throws IOException {
-        int start = 1;
-        int end = 168;
-        String BV = null;
+    @GetMapping("/duration")
+    public CommonResult getDuration(@RequestParam String BVNumber, @RequestParam Integer start, @RequestParam Integer end) throws IOException {
         int sum = 0;
         int hour = 0;
         int minute = 0;
-        String url = "https://api.bilibili.com/x/player/pagelist?bvid=BV1Zy4y1K7SH&jsonp=jsonp";
+        String url = "https://api.bilibili.com/x/player/pagelist?bvid=" + BVNumber + "&jsonp=jsonp";
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet httpGet = new HttpGet(url);
         HttpResponse response = httpClient.execute(httpGet);
@@ -44,13 +48,9 @@ class ElecApplicationTests {
             sum %= 3600;
             minute = sum / 60;
             sum %= 60;
-            System.out.println(hour + "小时" + minute + "分钟" + sum + "秒");
+            return CommonResult.success(new DurationVO(hour, minute, sum));
+        } else {
+            return CommonResult.failed();
         }
-
     }
-
-    @Test
-    void contextLoads() {
-    }
-
 }
