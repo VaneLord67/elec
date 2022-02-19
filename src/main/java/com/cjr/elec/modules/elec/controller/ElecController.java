@@ -1,5 +1,6 @@
 package com.cjr.elec.modules.elec.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.cjr.elec.common.api.CommonResult;
 import com.cjr.elec.modules.elec.dto.InsertDto;
 import com.cjr.elec.modules.elec.model.Elec;
@@ -22,6 +23,10 @@ public class ElecController {
 
     @PostMapping("/insert")
     public CommonResult insertElec(@RequestBody InsertDto dto) {
+        List<Elec> elecList = elecService.list(new LambdaUpdateWrapper<Elec>().eq(Elec::getTime, dto.getTime()));
+        if (elecList.size() >= 1) {
+            return CommonResult.success();
+        }
         Elec insertElec = Elec.builder().elec(dto.getElec()).time(dto.getTime()).build();
         elecService.save(insertElec);
         return CommonResult.success();
