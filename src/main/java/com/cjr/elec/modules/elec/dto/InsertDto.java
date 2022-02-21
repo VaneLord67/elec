@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 public class InsertDto {
-    private Date time;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    private Date time;
     private Float elec;
 }
