@@ -25,6 +25,9 @@ public class ElecController {
     public CommonResult insertElec(@RequestBody InsertDto dto) {
         int cnt = elecService.count(new LambdaUpdateWrapper<Elec>().eq(Elec::getTime, dto.getTime()));
         if (cnt >= 1) {
+            Elec sqlElec = elecService.getOne(new LambdaUpdateWrapper<Elec>().eq(Elec::getTime, dto.getTime()));
+            sqlElec.setElec(dto.getElec());
+            elecService.updateById(sqlElec);
             return CommonResult.success();
         }
         Elec insertElec = Elec.builder().elec(dto.getElec()).time(dto.getTime()).build();
