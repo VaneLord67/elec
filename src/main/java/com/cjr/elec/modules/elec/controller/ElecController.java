@@ -23,8 +23,8 @@ public class ElecController {
 
     @PostMapping("/insert")
     public CommonResult insertElec(@RequestBody InsertDto dto) {
-        List<Elec> elecList = elecService.list(new LambdaUpdateWrapper<Elec>().eq(Elec::getTime, dto.getTime()));
-        if (elecList.size() >= 1) {
+        int cnt = elecService.count(new LambdaUpdateWrapper<Elec>().eq(Elec::getTime, dto.getTime()));
+        if (cnt >= 1) {
             return CommonResult.success();
         }
         Elec insertElec = Elec.builder().elec(dto.getElec()).time(dto.getTime()).build();
